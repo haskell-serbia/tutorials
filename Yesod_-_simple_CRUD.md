@@ -15,7 +15,7 @@ If you looked at some Yesod tutorials you will know that routing is organized ar
 
 I will give you an example that is actually from this website's source code that is basically the same what Maximillian did but I will add edit action which he did not cover. This website was initialized using persistent template, I am guessing you already saw quick start [page](https://www.yesodweb.com/page/quickstart). If you take a peek at config/models you will see some predefined database models that are defined using special syntax. These correspond to database tables and serve to map the database data to the type level. We can define  Tutorial DSL like this :
 
-```
+```haskell
 -- config/models
 Tutorial
    title Text
@@ -24,7 +24,7 @@ Tutorial
 ```
 You can see I am using Markdown type for content because I prefer to edit this page content in markdown since it is fast and easy to edit. You can also pick that part in the linked video tutorial that I added before. So far so good, now you have access to Tutorial type which you can use in your form, something like this:
 
-```
+```haskell
 -- this code lives in some Handler
 
   tutorialForm :: AForm Handler Tutorial
@@ -35,17 +35,17 @@ You can see I am using Markdown type for content because I prefer to edit this p
 
 This basically means that form fields, once populated and submitted will be used to create new Tutorial data type which we will persist to database with the help of a handler. 
 This :
-```
+```haskell
 bfs('Title' :: Text)
 ```
 
 will render bootstrap 3 input since it looks nicer that default ones that come with Yesod. I order to use it you need to import Bootstrap3 lib
-```
+```haskell
 import Yesod.Form.Bootstrap3
 ```
 One thing that confused me when dealing with the form inputs was ```FieldSettings```  data type. 
 
-```
+```haskell
 data FieldSettings master = FieldSettings
     { fsLabel :: SomeMessage master
     , fsTooltip :: Maybe (SomeMessage master)
@@ -57,7 +57,7 @@ data FieldSettings master = FieldSettings
 ```
 You can use it to add label, tooltip or id to your input field but I didn't know how to use it but it is very simple:
 
-```
+```haskell
  let emailSettings = FieldSettings {
                 fsLabel = Just "My Label",
                 fsTooltip = Nothing,
@@ -80,7 +80,7 @@ Make sure you checkout [bootstrap3](https://hackage.haskell.org/package/yesod-fo
 
 To actually display created form we will need a GET Handler. Here is the code :
 
-```
+```haskell
 -- Tutorial.hs
 getTutorialsR :: Handler Html
 getTutorialsR = do
@@ -91,11 +91,11 @@ getTutorialsR = do
 What I showed you was almost completely the same as the stuff you can see in the linked tutorial. One thing that is missing from that tutorial is how to do the edit and that is what I will cover next. 
 You will need to use 
 ```
-yesod add-handler
+$ yesod add-handler
 ```
 command to create new handler responsible for editing. To fill in form with the edit data:
 
-```
+```haskell
 tutorialForm
   :: (RenderMessage (HandlerSite m) FormMessage, MonadHandler m)
   => Tutorial -> AForm m Tutorial
@@ -111,13 +111,13 @@ getTutorialEditR tutorialId = do
 
 ```
 Notice what we do in this line
-```
+```haskell
 areq textField (bfs ("Title" :: Text )) (Just $ tutorialTitle tutorial)
 ```
 We are using the record syntax generated function tutorialTitle to extract title from tutorial :: Tutorial and display it in form with Maybe constructor Just.
 Once the form submit button is clicked this post handler gets called:
 
-```
+```haskell
 -- Handlers/TutorialEdit.hs
 
 postTutorialEditR :: TutorialId -> Handler Html
