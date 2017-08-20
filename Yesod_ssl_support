@@ -1,0 +1,64 @@
+# Add SSL support to Yesod
+
+Ok this is going to be quick one. I serve haskell-serbia website with nginx web server that sits in front and just passes all requests to haskell warp server.
+I wanted to serve it over https and first step was to get a ssl certificate. There are free certificates available on [letsencrypt](https://letsencrypt.org/getting-started/).
+Once you install the certificate for your domain you need to make few adjustments in your virtual host file.
+Here is mine example:
+```haskell
+-- /etc/nginx/sites-available/default
+
+upstream yesod {
+        server 127.0.0.1:3000;
+        keepalive 8;
+}
+
+server {
+        listen 0.0.0.0:80;
+        listen 443 ssl;
+        server_name haskell-serbia.com www.haskell-serbia.com;
+        access_log /var/log/nginx/access_yesod.log;
+        error_log /var/log/nginx/error_yesod.log;
+        ssl_certificate /etc/letsencrypt/live/haskell-serbia.com-0001/fullchain.pem;
+        ssl_certificate_key /etc/letsencrypt/live/haskell-serbia.com-0001/privkey.pem;
+        ssl_protocols TLSv1 TLSv1.1 TLSv1.2;
+        ssl_prefer_server_ciphers on;
+        ssl_ciphers 'EECDH+AESGCM:EDH+AESGCM:AES256+EECDH:AES256+EDH';
+        location / {
+            proxy_set_header X-Real-IP $remote_addr;
+            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+            proxy_set_header Host $http_host;
+            proxy_set_header X-NginX-Proxy true;
+            proxy_pass https://yesod/;
+            proxy_redirect off;
+        }
+
+        location /excluded {
+            return 403;
+        }
+}
+```
+In order to have ssl support in your Yesod app you need to look at [Network.Wai.Handler.WarpTLS](https://hackage.haskell.org/package/warp-tls-3.2.4/docs/Network-Wai-Handler-WarpTLS.html).
+There is a constructor function `tlsSettings` that returns, well, `TLSSettings` if you pass it the path for the certificate and key files you generated with letsencrypt.
+```haskell
+-- example TLSSettings generation
+tlsS :: TLSSettings
+tlsS = tlsSettings "/etc/letsencrypt/live/DOMAIN/fullchain.pem" "/etc/letsencrypt/live/DOMAIN/privkey.pem"
+```
+Your appMain function serves the app and you need to adjust it to use `runTLS` function instead of `runSettings` in the Application.hs file
+
+```haskell
+-- Application.hs
+appMain :: IO ()
+appMain = do
+    settings <- loadYamlSettingsArgs
+        [configSettingsYmlValue]
+        useEnv
+
+    foundation <- makeFoundation settings
+    app <- makeApplication foundation
+
+    -- Run the application with Warp
+    -- runSettings (warpSettings foundation) app
+    runTLS tlsS  (warpSettings foundation)  app
+```
+And that's it. Reload your nginx server `sudo service nginx restart` and enjoy your safe surfing!
