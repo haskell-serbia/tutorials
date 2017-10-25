@@ -7,12 +7,12 @@ work to make this happen.
 
 We will go trough different steps in explaining dependent types in Haskell:
 
-- Terms vs. Types
-- Type level data
-- Lambda Cube
-- Local assumptions
-- Generic 
-- Sigma and Pi
+* Terms vs. Types
+* Type level data
+* Lambda Cube
+* Local assumptions
+* Generic 
+* Sigma and Pi
 
 ## Terms vs. Types
 Difference between the terms and types can be looked at in few different ways. 
