@@ -30,7 +30,7 @@ We can say for a type that it has a possible set of values that correspond to it
 
 ```
 data Void 
-data Unit =  ()
+data Unit = U
 ```
 
 In contrast to this types can also have a type level data.
