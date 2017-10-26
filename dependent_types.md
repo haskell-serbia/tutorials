@@ -29,8 +29,8 @@ So far so good right ?
 We can say for a type that it has a possible set of values that correspond to it. So `Void` is a type with zero inhabitants - empty set , `Unit` has a single element set (`()`) , `Bool` has two element set (`True` and `False`) and so on. Here is a small example of this
 
 ```
-data Void = Void
-data Unit = Unit ()
+data Void 
+data Unit =  ()
 ```
 
 In contrast to this types can also have a type level data.
