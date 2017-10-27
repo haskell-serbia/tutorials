@@ -73,7 +73,7 @@ So type level data is something that lives on the level of types but is not a ty
 
 [Lambda Cube](https://en.wikipedia.org/wiki/Lambda_cube) is the term from Type Theory and Math Logic. It builds on top of lambda calculus defining all possible type systems and each axes is the new abstraction. So going in some order from simple to more complex systems we arrive to what every programming language has :
 
-**Values depending on values**
+**Values depending on values** (_functions_)
 - This simply means that you have some sort of relation between variables if they are used in terms of each other. 
 
 Example:
@@ -86,7 +86,7 @@ b = even a :: Bool
 
 After that we get to the second step which is
 
-**Values depending on Types**
+**Values depending on Types** (_classes_)
 
 Example:
 
@@ -99,7 +99,7 @@ We can look at this as if type is determining the values which function (or cons
 
 Third step in our wonderfull type land is 
 
-**Types depending on Types**
+**Types depending on Types** (_type functions_)
 
 In order to demonstrate what we mean by this we will use Type Families. These [slides](https://cdepillabout.github.io/haskell-type-families-presentation/#/) do really good job in explaining what are type families.
 
@@ -107,7 +107,7 @@ Basically they provide a way to define a function that operates on types.
 
 The final step to dependent types is 
 
-**Types depending on Values**
+**Types depending on Values** (_dependent types_)
 
 As I mentioned at the beginning Haskell still does not have native support for dependent types but we have a handfull of extensions that provide a way to touch on that. We are now arriving to the next step in understanding dependent types which is
 
