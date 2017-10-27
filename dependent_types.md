@@ -2,7 +2,7 @@
 
 Haskell currently does not support dependent types natively but there are certain extensions that help us to get there.
 
-It is not as elegant as it would be if we had build in support for this but Richard Eisenberg is busy at work doing a great
+It is not as elegant as it would be if we had build in support for this but Richard Eisenberg is busy doing a great
 work to make this happen. 
 
 We will go trough different steps in explaining dependent types in Haskell:
@@ -17,9 +17,12 @@ We will go trough different steps in explaining dependent types in Haskell:
 ## Terms vs. Types
 Difference between the terms and types can be looked at in few different ways. 
 
-First one would be that if you look at type annotation, anything to the left of the `::` is considered a term while anything to the right of it is the type.
+First one would be that if you look at type annotation:
+```
+term :: type :: kind
+```
 
-Another way of looking at this could be with regards to `=` sign in function definition but this time it is other way around - anything to the left of `=` is a type and anything to the right a type. 
+Another way of looking at this could be with regards to `=` sign in function implementation but this time it is other way around - anything to the left of `=` are types and when we are to the right of `=` we are in term land (with exceptions of  `::` type annotations and `@` `TypeApplications` extension  ).
 
 We can also say something that applies to standard Haskell (without extensions) and that is that terms are present at runtime while types get erased at runtime. This statement is not true when it comes to dependent types but it serves well in the path of our understanding of the topic.
 
