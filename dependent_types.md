@@ -37,4 +37,34 @@ data Unit = U
 data Bool = True | False
 ```
 
-In contrast to this types can also have a type level data.
+In contrast to this types can also have a _type level data_. That is the data that lives on the type level and does not have associated set of inhabitants. We can use type level data to provide extra safety to our programs since that allows us to _describe_ how our types should be constructed thus eliminating more possible runtime errors. 
+
+Here is a small example from `GHC` manual that provides a way of defining an accessor with convenient type level _String_ (`Symbol`) 
+```
+{-# LANGUAGE DataKinds #-}
+{-# LANGUAGE KindSignatures #-}
+{-# LANGUAGE MultiParamTypeClasses #-}
+{-# LANGUAGE FunctionalDependencies #-}
+{-# LANGUAGE FlexibleInstances #-}
+module Main where
+
+import GHC.TypeLits
+
+data Label (l :: Symbol) = Get
+data Point = Point Int Int deriving Show
+
+class Has a l b | a l -> b where
+  from :: a -> Label l -> b
+
+instance Has Point "x" Int
+    where from (Point x _) _ = x
+
+instance Has Point "y" Int
+    where from (Point _ y) _ = y
+
+example :: Int
+example = from (Point 1 2) (Get :: Label "x")
+
+```
+
+
