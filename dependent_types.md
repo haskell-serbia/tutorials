@@ -67,5 +67,37 @@ example :: Int
 example = from (Point 1 2) (Get :: Label "x")
 
 ```
+So type level data is something that lives on the level of types but is not a type.
 
+## Lambda Cube
+
+Lambda Cube is the term from Type Theory and Math Logic. It builds on top of lambda calculus defining all possible type systems and each axes is the new abstraction. So going in some order from simple to more complex systems we arrive to what every programming language has :
+
+**Values depending on values**
+- This simply means that you have some sort of relation between variables if they are used in terms of each other. 
+
+Example:
+
+```
+a :: Integer
+b = even a :: Bool
+-- here b depends on a 
+```
+
+After that we get to the second step which is
+
+**Values depending on Types**
+
+Example:
+
+```
+max :: Integer
+max :: Double
+```
+
+We can look at this as if type is determining the values which function (or constant) `max` can hold.
+
+Third step in our wonderfull type land is 
+
+**Types depending on Types**
 
