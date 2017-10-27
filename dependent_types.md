@@ -39,7 +39,7 @@ data Bool = True | False
 
 In contrast to this types can also have a _type level data_. That is the data that lives on the type level and does not have associated set of inhabitants. We can use type level data to provide extra safety to our programs since that allows us to _describe_ how our types should be constructed thus eliminating more possible runtime errors. 
 
-Here is a small example from `GHC` manual that provides a way of defining an accessor with convenient type level _String_ (`Symbol`) 
+Here is a small example from `GHC` manual that provides a way of defining sort of an accessor with convenient type level _String_ (`Symbol`) 
 ```
 {-# LANGUAGE DataKinds               #-}
 {-# LANGUAGE KindSignatures          #-}
