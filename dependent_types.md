@@ -41,11 +41,11 @@ In contrast to this types can also have a _type level data_. That is the data th
 
 Here is a small example from `GHC` manual that provides a way of defining an accessor with convenient type level _String_ (`Symbol`) 
 ```
-{-# LANGUAGE DataKinds #-}
-{-# LANGUAGE KindSignatures #-}
-{-# LANGUAGE MultiParamTypeClasses #-}
-{-# LANGUAGE FunctionalDependencies #-}
-{-# LANGUAGE FlexibleInstances #-}
+{-# LANGUAGE DataKinds               #-}
+{-# LANGUAGE KindSignatures          #-}
+{-# LANGUAGE MultiParamTypeClasses   #-}
+{-# LANGUAGE FunctionalDependencies  #-}
+{-# LANGUAGE FlexibleInstances       #-}
 module Main where
 
 import GHC.TypeLits
