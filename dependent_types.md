@@ -101,3 +101,17 @@ Third step in our wonderfull type land is
 
 **Types depending on Types**
 
+In order to demonstrate what we mean by this we will use Type Families. These [slides](https://cdepillabout.github.io/haskell-type-families-presentation/#/) do really good job in explaining what are type families.
+
+Basically they provide a way to define a function that operates on types. 
+
+The final step to dependent types is 
+
+**Types depending on Values**
+
+As I mentioned at the beginning Haskell still does not have native support for dependent types but we have a handfull of extensions that provide a way to touch on that. We are now arriving to the next step in understanding dependent types which is
+
+## Local Assumptions
+
+
+
