@@ -95,7 +95,7 @@ max :: Integer
 max :: Double
 ```
 
-We can look at this as if type is determining the values which function (or constant) `max` can hold.
+We can look at this as if type is determining the values which constant `max` can hold. This is a basic relation between values and types, values need to be of some type in Haskell.
 
 Third step in our wonderfull type land is 
 
@@ -103,7 +103,7 @@ Third step in our wonderfull type land is
 
 In order to demonstrate what we mean by this we will use Type Families. These [slides](https://cdepillabout.github.io/haskell-type-families-presentation/#/) do really good job in explaining what are type families.
 
-Basically they provide a way to define a function that operates on types. 
+Basically they provide a way to define a function that operates on types. Depending on the concrete implementation we can return different types for different instances of the typeclass or at least we have that choice.
 
 The final step to dependent types is 
 
