@@ -4,7 +4,7 @@ Dependent types enable us to write more safe programs and move some of the possi
 
 Haskell currently does not support dependent types natively but there are certain extensions that help us to get there.
 
-It is not as elegant as it would be if we had build in support for this but [Richard Eisenberg](https://typesandkinds.wordpress.com/) is busy doing a great work to make this happen. 
+It is not as elegant as it would be if we had built in support for this but [Richard Eisenberg](https://typesandkinds.wordpress.com/) is busy doing a great work to make this happen. 
 
 We will go trough different steps in explaining dependent types in Haskell:
 
