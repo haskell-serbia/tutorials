@@ -144,8 +144,8 @@ Lets look at some example code:
 
 ```
 data IntOrString a where
-    IntConstructor    :: a ~ Int    =>  IntOrString a
-    StringConstructor :: a ~ String => IntOrString a
+    IntConstructor    :: a ~ Int    =>  IntOrString a -- a has a type constraint to Int
+    StringConstructor :: a ~ String => IntOrString a  -- a has a type constraint to String
 ```
 This is desugared version of the more convenient syntax that we usually use
 
