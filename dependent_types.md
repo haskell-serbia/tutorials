@@ -11,7 +11,7 @@ We will go trough different steps in explaining dependent types in Haskell:
 * Terms vs. Types
 * Type level data
 * Lambda Cube
-* Local assumptions
+* Local Assumptions
 * Generic 
 * Sigma and Pi
 
