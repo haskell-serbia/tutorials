@@ -110,7 +110,7 @@ In order to demonstrate what we mean by this we will use Type Families. These [s
 
 Basically they provide a way to define a function that operates on types. Depending on the concrete implementation we can return different types for different instances of the typeclass or at least we have that choice.
 
-The final step to dependent types is 
+This leads us to the final step to dependent types which is: 
 
 **Types depending on Values** (_dependent types_)
 
