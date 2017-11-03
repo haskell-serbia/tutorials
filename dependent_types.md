@@ -120,13 +120,13 @@ As I mentioned at the beginning Haskell still does not have native support for d
 
 GADTs or Generalized Algrbraic DataTypes is the Haskell extension that provides us with _local assumptions_. What does that mean? 
 
-Well, let us look atn some of the standard Haskell datatypes :
+Well, let us look at some of the standard Haskell datatypes :
 
 ```
 data Maybe a = Just a | Nothing
 data Either a b = Left a | Right b
 ```
-We could also rewrite these types with pattern matching instead of using pipe operator `|` :
+If we rewrote these types with hypotetical syntax we would come to this:
 ```
 data Maybe a = Just a
      Maybe a = Nothing
@@ -134,20 +134,51 @@ data Maybe a = Just a
 data Either a b = Left a
      Either a b = Right b
 ```
-but this informs us that we are really repeating ourselves when looking the left side of `=` . 
+and this can inform us that we are really limited with what we do on left side of the `=` sign. 
 
-Problem with this is that we don't get to do pattern matching on the type constructors which in turn means that we can only have free type variables on the left side and that is why it is more convenient to use just the pipe operator - we can't do anything special with the type variables. Or can we ?
+Problem with this is that we don't get to do pattern matching on the type constructors which in turn means that we can only have free type variables on the left side.
 
-This is where *GADTs* extension comes to play. It allows us to do pattern matching on constructor.
+This is where *GADTs* language extension comes to play. It allows us to define type contraints on the type variable which limits the possible type variables that can be used to construct a type and later in the code have *local assumptions* when pattern matching on the data constructor which was used to constuct a type. 
+
+Lets look at some example code:
+
 ```
 data IntOrString a where
-    IntConstructor :: Int ->  IntOrString Int
-    StringConstructor :: String -> IntOrString String
+    IntConstructor    :: a ~ Int    =>  IntOrString a
+    StringConstructor :: a ~ String => IntOrString a
 ```
-The classic `Maybe` datatype would look like this if written with GADTS
+This is desugared version of the more convenient syntax that we usually use
+
+```
+data IntOrString a where
+    IntConstructor    :: Int    -> IntOrString a
+    StringConstructor :: String -> IntOrString a
+```
+
+The classic `Maybe` datatype would look like this if written with GADTs
+
 ```
 data Maybe a where
-    Just :: a -> Maybe a
+    Just    :: a -> Maybe a
     Nothing :: Maybe a
 ```
+
+
+```
+wasItStringOrInt :: IntOrString a -> String
+wasItStringOrInt x =
+    case x of
+        -- Local assumptions - Local because it is limited to only one case branch 
+        -- and assumption because we assume this was the data constructor used  
+        IntConstructor a -> "Constructed with Int" 
+        StringConstructor b -> "Constructed with String
+        
+-- ghci
+λ> let x = IntConstructor 42
+λ> wasItStringOrInt x
+"Constructed with Int"
+```
+
+
+
 
