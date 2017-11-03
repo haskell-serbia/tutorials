@@ -144,7 +144,7 @@ Lets look at some example code:
 
 ```
 data IntOrString a where
-    IntConstructor    :: a ~ Int    =>  IntOrString a -- a has a type constraint to Int
+    IntConstructor    :: a ~ Int    => IntOrString a -- a has a type constraint to Int
     StringConstructor :: a ~ String => IntOrString a  -- a has a type constraint to String
 ```
 This is desugared version of the more convenient syntax that we usually use
@@ -162,22 +162,23 @@ data Maybe a where
     Just    :: a -> Maybe a
     Nothing :: Maybe a
 ```
-
+And here is example of the pattern match:
 
 ```
 wasItStringOrInt :: IntOrString a -> String
 wasItStringOrInt x =
     case x of
         -- Local assumptions - Local because it is limited to only one case branch 
-        -- and assumption because we assume this was the data constructor used  
-        IntConstructor a -> "Constructed with Int" 
-        StringConstructor b -> "Constructed with String
+        -- and assumption because we assume what type is the type of our type variable  
+        IntConstructor a    -> "Constructed with Int"      -- a ~ Int
+        StringConstructor b -> "Constructed with String    -- a ~ String
         
 -- ghci
 λ> let x = IntConstructor 42
 λ> wasItStringOrInt x
 "Constructed with Int"
 ```
+
 
 
 
