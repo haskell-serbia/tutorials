@@ -22,7 +22,7 @@ First one would be that if you look at type annotation:
 ```
 term :: type :: kind
 ```
-You can ignore kinds for now, they are to type what type is to terms - so like type of the type constructor. This sounds complicated but I promise it is not, just think of them as _types one level up_. You can read about kinds [here](https://wiki.haskell.org/Kind)
+You can ignore kinds for now, they are to types what types are to terms - so like type of the type constructor. This sounds complicated but I promise it is not, just think of them as _types one level up_. You can read about kinds [here](https://wiki.haskell.org/Kind)
 
 Another way of looking at this could be with regards to `=` sign in function implementation but this time it is other way around. Anything to the left of `=` are types and when we are to the right of `=` we are in term land (with exceptions of  `::` type annotations and `@` `TypeApplications` extension).
 
