@@ -145,7 +145,7 @@ Lets take a look at some example code:
 ```
 data IntOrString a where
     IntConstructor    :: a ~ Int    => IntOrString a -- a has a type constraint to Int
-    StringConstructor :: a ~ String => IntOrString a  -- a has a type constraint to String
+    StringConstructor :: a ~ String => IntOrString a -- a has a type constraint to String
 ```
 This is desugared version of the more convenient syntax that we usually use
 
@@ -178,6 +178,24 @@ wasItStringOrInt x =
 λ> wasItStringOrInt x
 "Constructed with Int"
 ```
+## Generic
+If we look at a normal Haskell Algebraic Data Type `T`
+
+```
+data T = A Int Int
+  | B String String String
+  | C () Void
+  | D
+```
+We can say that `T` is a sum of products `A B C D`. In order to understand sum we can define this and every other ADT only using
+`Either`, `() (unit)` , `(,) tuple`  and function type. So our ADT could be encoded like this using infix notation
+
+```
+type T' = (Int, Int) `Either` (String, String, String) `Either` ((), Void) `Either` ()
+```
+Tuples provide us with products, Either provides us with sums, unit is empty constructor and function type is just a built in function. 
+
+If we understand these simple types than we understand Algebraic Data Types.
 
 
 
