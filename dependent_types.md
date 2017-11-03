@@ -118,5 +118,18 @@ As I mentioned at the beginning Haskell still does not have native support for d
 
 ## Local Assumptions
 
+GADTs or Generalized Algrbraic DataTypes is the Haskell extension that provides us with _local assumptions_. What does that mean? 
+
+Well, let us look at normal haskell pattern match example returning just a `Text` :
+
+```
+data P = A x | B y | C z
+
+patternMatchMe :: P -> Text
+patternMatchMe (A _) = "A data constructor"
+patternMatchMe (B _) = "B data constructor"
+patternMatchMe (C _) = "C data constructor"
+
+```
 
 
