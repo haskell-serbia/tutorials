@@ -140,7 +140,7 @@ Problem with this is that we don't get to do pattern matching on the type constr
 
 This is where *GADTs* language extension comes to play. It allows us to define type contraints on the type variable which limits the possible type variables that can be used to construct a type and later in the code have *local assumptions* when pattern matching on the data constructor which was used to constuct a type. 
 
-Lets look at some example code:
+Lets take a look at some example code:
 
 ```
 data IntOrString a where
@@ -169,7 +169,7 @@ wasItStringOrInt :: IntOrString a -> String
 wasItStringOrInt x =
     case x of
         -- Local assumptions - Local because it is limited to only one case branch 
-        -- and assumption because we assume what type is the type of our type variable  
+        -- and assumption because we assume what type is our type parameter
         IntConstructor a    -> "Constructed with Int"      -- a ~ Int
         StringConstructor b -> "Constructed with String    -- a ~ String
         
