@@ -1,9 +1,10 @@
 # Dependent Types in Haskell
 
+Dependent types enable us to write more safe programs and move some of the possible runtime bugs to compile time errors. They enable us to "lift" terms to the type level. 
+
 Haskell currently does not support dependent types natively but there are certain extensions that help us to get there.
 
-It is not as elegant as it would be if we had build in support for this but Richard Eisenberg is busy doing a great
-work to make this happen. 
+It is not as elegant as it would be if we had build in support for this but [Richard Eisenberg](https://typesandkinds.wordpress.com/) is busy doing a great work to make this happen. 
 
 We will go trough different steps in explaining dependent types in Haskell:
 
@@ -38,9 +39,13 @@ data Unit = U
 data Bool = True | False
 ```
 
-In contrast to this types can also have a _type level data_. That is the data that lives on the type level and does not have associated set of inhabitants. We can use type level data to provide extra safety to our programs since that allows us to _describe_ how our types should be constructed thus eliminating more runtime errors. 
+In contrast to this types can also have a _type level data_. That is the data that lives on the type level and does not have associated set of inhabitants. 
 
-Here is a small example from `GHC` manual that provides a way of defining sort of an accessor with convenient type level _String_ (`Symbol`) 
+Haskell is famous for its _If it compiles - it works_ approach, which is very true but we are haskellers - we always want more type safety and abstraction right ? 
+
+We can use type level data to provide extra safety to our programs since that allows us to _describe_ how our types should be constructed thus eliminating more runtime errors. 
+
+Here is a small example from `GHC` [manual](https://ghc.readthedocs.io) that provides a way of defining sort of an accessor with convenient type level _String_ (`Symbol`) 
 ```
 {-# LANGUAGE DataKinds               #-}
 {-# LANGUAGE KindSignatures          #-}
