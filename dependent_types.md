@@ -120,16 +120,34 @@ As I mentioned at the beginning Haskell still does not have native support for d
 
 GADTs or Generalized Algrbraic DataTypes is the Haskell extension that provides us with _local assumptions_. What does that mean? 
 
-Well, let us look at normal haskell pattern match example returning just a `Text` :
+Well, let us look atn some of the standard Haskell datatypes :
 
 ```
-data P = A x | B y | C z
-
-patternMatchMe :: P -> Text
-patternMatchMe (A _) = "A data constructor"
-patternMatchMe (B _) = "B data constructor"
-patternMatchMe (C _) = "C data constructor"
-
+data Maybe a = Just a | Nothing
+data Either a b = Left a | Right b
 ```
+We could also rewrite these types with pattern matching instead of using pipe operator `|` :
+```
+data Maybe a = Just a
+     Maybe a = Nothing
 
+data Either a b = Left a
+     Either a b = Right b
+```
+but this informs us that we are really repeating ourselves when looking the left side of `=` . 
+
+Problem with this is that we don't get to do pattern matching on the type constructors which in turn means that we can only have free type variables on the left side and that is why it is more convenient to use just the pipe operator - we can't do anything special with the type variables. Or can we ?
+
+This is where *GADTs* extension comes to play. It allows us to do pattern matching on constructor.
+```
+data IntOrString a where
+    IntConstructor :: Int ->  IntOrString Int
+    StringConstructor :: String -> IntOrString String
+```
+The classic `Maybe` datatype would look like this if written with GADTS
+```
+data Maybe a where
+    Just :: a -> Maybe a
+    Nothing :: Maybe a
+```
 
