@@ -118,7 +118,7 @@ As I mentioned at the beginning Haskell still does not have native support for d
 
 ## Local Assumptions
 
-GADTs or Generalized Algrbraic DataTypes is the Haskell extension that provides us with _local assumptions_. What does that mean? 
+GADTs or Generalized Algebraic DataTypes is the Haskell extension that provides us with _local assumptions_. What does that mean? 
 
 Well, let us look at some of the standard Haskell datatypes :
 
