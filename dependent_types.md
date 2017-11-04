@@ -211,33 +211,30 @@ You can see the theory behing all of this [here](https://en.wikipedia.org/wiki/I
 
 ## Σ and Π
 
-First we will look at some pseudo code so we can explain easier what is going on:
+First we will look at some pseudo code so we can explain easier what is going on and after that we will take a look at the example that actually compiles.
 
 Sigma type is like a tuple but with some caviats
 
 ```
      (A     , B) 
-Σ :: (x :: A) B
+Σ :: (x :: A) B(x)
     
 ```
-Here `x` is of type `A` and we are able to use it inside some type level function.
-```
-Σ :: (x :: A) B(x)
-```
+Here `x` is of type `A` and we are able to use it inside some type level function `B(x)`.
 
-So one possible sigma type could be
+One possible sigma type could be
 
 ```
 Σ :: (x :: Bool) (if x then Int else String)
 
-
+-- possible values
 (True, 42)
 (False, "abc")
 ``` 
 And if we try to use this in a function we can have something like:
 
 ```
-f :: (x :: Bool) (if x then Int else String) -> String
+f :: ∑ (x :: Bool) (if x then Int else String) -> String
 f (x,y) = ???
 ```
 So now we have a function from `sigma` to `String` and we are able to use local assumptions about `y` which is a term level data
@@ -248,6 +245,7 @@ f (x,y) = case x of
   True -> show y -- if x is True then y ~ Int
   False -> y     -- if x is False then y ~ String
 ```
-∑ is type level generalization of a `Sum` types - it is a sum of all possible first components of a tuple (True + False in our case).
 
-Π is type level generalization of `Product` types.
+*∑* is type level generalization of a `Sum` types - it is a sum of all possible first components of a tuple (True + False in our case).
+
+*Π* is type level generalization of `Product` types.
