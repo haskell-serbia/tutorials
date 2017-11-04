@@ -208,7 +208,7 @@ If we understand these simple types than we understand Algebraic Data Types.
 If we understand Σ (sigma) and Π (pi) we understand dependent types.
 
 ## Σ and Π
-
+We can thank [Martin Lof](https://en.wikipedia.org/wiki/Intuitionistic_type_theory) for this.
 First we will look at some pseudo code so we can explain easier what is going on:
 
 Sigma type is like a tuple but with some caviats
