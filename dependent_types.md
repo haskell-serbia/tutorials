@@ -2,7 +2,9 @@
 
 _Why_ ?
 
-Dependent types help to form a proof of the most critical properties in our program in the form of very specific types that ensure those invariants. They enable us to "lift" terms to the type level. Languages like Idris Agda or Coq support dependent types natively and Haskell has certain extensions that help us to simulate them.
+Dependent types help to form a proof that the most critical properties in our program work the way we want them and all that in compile time. We form very specific types that ensure all invariants program can have work properly.
+
+They enable us to _lift_ terms to the type level and have types be dependent on them. Languages like Idris Agda or Coq support dependent types natively and Haskell has certain extensions that help us to simulate them.
 
 We will go trough different steps in explaining dependent types in Haskell:
 
@@ -189,12 +191,14 @@ data T = A Int Int
   | C () Void
   | D
 ```
+
 We can say that `T` is a sum of products `A B C D`. In order to understand sum we can define this and every other ADT only using
 `Either`, `() (unit)` , `(,) tuple`  and function type. So our ADT could be encoded like this using infix notation
 
 ```
 type T' = (Int, Int) `Either` (String, String, String) `Either` ((), Void) `Either` ()
 ```
+
 Tuples provide us with products, Either provides us with sums, unit is empty constructor and function type is just a built in function. 
 
 If we understand these simple types than we understand Algebraic Data Types.
@@ -202,6 +206,25 @@ If we understand these simple types than we understand Algebraic Data Types.
 If we understand Σ (sigma) and Π (pi) we understand dependent types.
 
 ## Σ and Π
+
+Sigma type is like a tuple but with some caviats
+
+```
+     (A     , B) 
+Σ :: (x :: A) B(x)
+    
+```
+Here `x` is of type `A` and type `B` can mention `x` in a type level function that accepts the term level argument.
+
+So one possible sigma type could be
+
+```
+Σ :: (x :: Bool) (if x then Int else String)
+
+
+(True, 42)
+(False, "abc")
+``` 
 
 
 
