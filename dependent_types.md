@@ -1,10 +1,8 @@
 # Dependent Types in Haskell
 
-Dependent types enable us to write more safe programs and move some of the possible runtime bugs to compile time errors. They enable us to "lift" terms to the type level. 
+_Why_ ?
 
-Haskell currently does not support dependent types natively but there are certain extensions that help us to get there.
-
-It is not as elegant as it would be if we had built in support for this but [Richard Eisenberg](https://typesandkinds.wordpress.com/) is busy doing a great work to make this happen. 
+Dependent types help to form a proof of the most critical properties in our program in the form of very specific types that ensure those invariants. They enable us to "lift" terms to the type level. Languages like Idris Agda or Coq support dependent types natively and Haskell has certain extensions that help us to simulate them.
 
 We will go trough different steps in explaining dependent types in Haskell:
 
@@ -178,7 +176,11 @@ wasItStringOrInt x =
 λ> wasItStringOrInt x
 "Constructed with Int"
 ```
+
 ## Generic
+
+Lets now build our intuition about types in general and also dependent types.
+
 If we look at a normal Haskell Algebraic Data Type `T`
 
 ```
@@ -196,6 +198,12 @@ type T' = (Int, Int) `Either` (String, String, String) `Either` ((), Void) `Eith
 Tuples provide us with products, Either provides us with sums, unit is empty constructor and function type is just a built in function. 
 
 If we understand these simple types than we understand Algebraic Data Types.
+
+If we understand Σ (sigma) and Π (pi) we understand dependent types.
+
+## Σ and Π
+
+
 
 
 
