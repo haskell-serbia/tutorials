@@ -2,9 +2,11 @@
 
 _Why_ ?
 
-Dependent types help to form a proof that the most critical properties in our program work the way we want them and all that in compile time. We form very specific types that ensure all invariants program can have work properly.
+Dependent types help to form a proof that the most critical properties in our program work the way we want them and all that in compile time. We form very specific types that ensure all invariants program can have to work properly. They enable us to _lift_ terms to the type level and have types be dependent on them. 
 
-They enable us to _lift_ terms to the type level and have types be dependent on them. Languages like Idris Agda or Coq support dependent types natively and Haskell has certain extensions that help us to simulate them.
+Dependent types use type level functions that are reduced using term level data.
+
+Languages like Idris Agda or Coq support dependent types natively and Haskell has certain extensions that help us to simulate them.
 
 We will go trough different steps in explaining dependent types in Haskell:
 
@@ -207,6 +209,8 @@ If we understand Σ (sigma) and Π (pi) we understand dependent types.
 
 ## Σ and Π
 
+First we will look at some pseudo code so we can explain easier what is going on:
+
 Sigma type is like a tuple but with some caviats
 
 ```
@@ -214,21 +218,36 @@ Sigma type is like a tuple but with some caviats
 Σ :: (x :: A) B
     
 ```
-Here `x` is of type `A` and type `B` can mention `x` in a type level function that accepts the term level argument.
+Here `x` is of type `A` and we are able to use it inside some type level function.
+```
+Σ :: (x :: A) B(x)
+```
 
 So one possible sigma type could be
 
 ```
-Σ :: (x ::    A)  B(x)
 Σ :: (x :: Bool) (if x then Int else String)
 
 
 (True, 42)
 (False, "abc")
 ``` 
+And if we try to use this in a function we can have something like:
 
+```
+f :: (x :: Bool) (if x then Int else String) -> String
+f (x,y) = ???
+```
+So now we have a function from `sigma` to `String` and we are able to use local assumptions about `y` which is a term level data
 
-
+```
+f :: (x :: Bool) (if x then Int else String) -> String
+f (x,y) = case x of
+  True -> show y -- if x is True then y ~ Int
+  False -> y     -- if x is False then y ~ String
+```
+Sigma is type level generalization of `Either`. Here `True` and `False`, two possible values for our `A` type in sigma directly correspond
+to sum type since we have two possible _branches_.
 
 
 
