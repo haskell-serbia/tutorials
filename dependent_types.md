@@ -205,10 +205,12 @@ Tuples provide us with products, Either provides us with sums, unit is empty con
 
 If we understand these simple types than we understand Algebraic Data Types.
 
-If we understand Σ (sigma) and Π (pi) we understand dependent types.
+If we understand Σ (sigma) and Π (pi) we understand dependent types. 
+
+You can see the theory behing all of this [here](https://en.wikipedia.org/wiki/Intuitionistic_type_theory) .
 
 ## Σ and Π
-We can thank [Martin Lof](https://en.wikipedia.org/wiki/Intuitionistic_type_theory) for this.
+
 First we will look at some pseudo code so we can explain easier what is going on:
 
 Sigma type is like a tuple but with some caviats
@@ -246,9 +248,6 @@ f (x,y) = case x of
   True -> show y -- if x is True then y ~ Int
   False -> y     -- if x is False then y ~ String
 ```
-Sigma is type level generalization of `Either`. Here `True` and `False`, two possible values for our `A` type in sigma directly correspond
-to sum type since we have two possible _branches_.
+∑ is type level generalization of a `Sum` types - it is a sum of all possible first components of a tuple (True + False in our case).
 
-
-
-
+Π is type level generalization of `Product` types.
