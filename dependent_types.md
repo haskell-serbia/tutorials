@@ -225,7 +225,7 @@ Here `x` is of type `A` and we are able to use it inside some type level functio
 One possible sigma type could be
 
 ```
-Σ :: (x :: Bool) (if x then Int else String)
+Σ :: (x :: Bool) (if x then Int else String) -- this if statement can be implemented as a type family in haskell
 
 -- possible values
 (True, 42)
@@ -237,7 +237,9 @@ And if we try to use this in a function we can have something like:
 f :: ∑ (x :: Bool) (if x then Int else String) -> String
 f (x,y) = ???
 ```
-So now we have a function from `sigma` to `String` and we are able to use local assumptions about `y` which is a term level data
+So now we have a function from `sigma` to `String` , we know that `x` is of type `Bool` but we have no idea what `y` is .
+What can we do with it ?
+We can pattern match on it!
 
 ```
 f :: (x :: Bool) (if x then Int else String) -> String
@@ -245,7 +247,32 @@ f (x,y) = case x of
   True -> show y -- if x is True then y ~ Int
   False -> y     -- if x is False then y ~ String
 ```
+As soon as we pattern match we are able to use local assumptions about `y` which is a term level data and we know that `y` can be either `Int` or `String`. Any other type would have caused compile time error and in this way we are able to prevent our programs from working with some random types that we don't want and prove that our program is correct at compile time!
+How cool is that!
 
-*∑* is type level generalization of a `Sum` types - it is a sum of all possible first components of a tuple (True + False in our case).
 
-*Π* is type level generalization of `Product` types.
+**∑** is type level generalization of a `Sum` types - it is a sum of all possible first components of a tuple (True + False in our case).
+
+**Π** is type level generalization of `Product` types.
+
+Let's look at the definition
+
+```
+      A   ->  B
+Σ :: (x :: A) B(x)
+```
+The type of the result of the `B` will depend on its input.
+```
+f :: Π (x :: Bool) (if x then Int else String) -> String
+f x = case x of
+  True -> 42
+  False -> "abc"  
+```
+So what we get back from a Π type is a function. Why we say it is a product type ? You can think of it like this - you are able to get back values from a Π type which is not a case for the ∑ type. ∑ type can have as a return type one of the case branches while from Π you can extract values much like from a product type in Haskell
+
+ ```
+ f True = 42
+ f False = "abc"
+ ```
+
+Ok enough with the theory you say, let's look at a simple example using real code
