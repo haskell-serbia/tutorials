@@ -211,7 +211,7 @@ Sigma type is like a tuple but with some caviats
 
 ```
      (A     , B) 
-Σ :: (x :: A) B(x)
+Σ :: (x :: A) B
     
 ```
 Here `x` is of type `A` and type `B` can mention `x` in a type level function that accepts the term level argument.
@@ -219,6 +219,7 @@ Here `x` is of type `A` and type `B` can mention `x` in a type level function th
 So one possible sigma type could be
 
 ```
+Σ :: (x ::    A)  B(x)
 Σ :: (x :: Bool) (if x then Int else String)
 
 
