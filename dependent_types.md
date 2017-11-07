@@ -3,46 +3,42 @@
 
 _Why_ ?
 
-Dependent types help to form a proof that the most critical features work the way we want them and all that in compile time. We form very specific types that ensure all invariants program can have to work properly. They enable us to _lift_ terms to the type level and have types be dependent on them. 
+Dependent types help to form a proof that the most critical features work the way we want them and all that in compile time. We form very specific types that ensure all invariants program can have will work properly. 
 
 Dependent types use type level functions that are reduced using term level data.
 
-Languages like Idris Agda or Coq support dependent types natively and Haskell has certain extensions that help us to simulate them.
+Languages like Idris, Agda or Coq support dependent types natively and Haskell has certain extensions that help us simulate them.
 
 We will go trough different steps in explaining dependent types in Haskell:
 
 * Terms vs. Types
-* Type level data
+* Type Level Data
 * Lambda Cube
 * Local Assumptions
-* Generic 
+* Generic Programming
 * Sigma and Pi
 
 ## Terms vs. Types
-Difference between the terms and types can be looked at in few different ways. 
+Difference between the terms and types can be looked at in a few different ways. 
 
-First one would be that if you look at type annotation:
+First one would be that if you look at a type/kind annotation:
 ```
 term :: type :: kind
 ```
-You can ignore kinds for now, they are to types what types are to terms - so like type of the type constructor. This sounds complicated but I promise it is not, just think of them as _types one level up_. You can read about kinds [here](https://wiki.haskell.org/Kind)
-
-Another way of looking at this could be with regards to `=` sign in function implementation but this time it is other way around. Anything to the left of `=` are types and when we are to the right of `=` we are in term land (with exceptions of  `::` type annotations and `@` `TypeApplications` extension).
+You can ignore kinds for now, they are to types what types are to terms - so like type of a type constructor. You can think of them as _types one level up_. Read about kinds [here](https://wiki.haskell.org/Kind)
 
 We can also say something that applies to standard Haskell (without extensions) and that is that terms are present at runtime while types get erased at runtime. This statement is not true when it comes to dependent types but it serves well in the path of our understanding of the topic.
 
-So far so good right ?
-
 ## Type level data
-We can say for a type that it has a possible set of values that correspond to it. So `Void` is a type with zero inhabitants - empty set , `Unit` has a single element set (`U`) , `Bool` has two element set (`True` and `False`) and so on. Here is a small example of this
+We can say for a type that it has a set of possible values that correspond to it. So `Void` is a type with zero inhabitants - empty set , `unit` has a single element set (`()`) , `Bool` has two element set (`True` and `False`) and so on. Here is a small example of this
 
 ```
 data Void 
-data Unit = U
+data Unit = ()
 data Bool = True | False
 ```
 
-In contrast to this types can also have a _type level data_. That is the data that lives on the type level and does not have associated set of inhabitants. 
+In contrast to this types can also contain _type level data_. That is the data that lives on the type level and does not have associated set of inhabitants. 
 
 Haskell is famous for its _If it compiles - it works_ approach, which is very true but we are haskellers - we always want more type safety and abstraction right ? 
 
