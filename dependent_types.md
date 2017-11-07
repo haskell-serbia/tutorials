@@ -3,7 +3,7 @@
 
 _Why_ ?
 
-Dependent types help to form a proof that the most critical properties in our program work the way we want them and all that in compile time. We form very specific types that ensure all invariants program can have to work properly. They enable us to _lift_ terms to the type level and have types be dependent on them. 
+Dependent types help to form a proof that the most critical features work the way we want them and all that in compile time. We form very specific types that ensure all invariants program can have to work properly. They enable us to _lift_ terms to the type level and have types be dependent on them. 
 
 Dependent types use type level functions that are reduced using term level data.
 
