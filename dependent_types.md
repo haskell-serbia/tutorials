@@ -42,8 +42,6 @@ In contrast to this types can also contain _type level data_. That is the data t
 
 Haskell is famous for its _If it compiles - it works_ approach, which is very true but we are haskellers - we always want more type safety and abstraction right ? 
 
-We can use type level data to provide extra safety to our programs since that allows us to _describe_ how our types should be constructed thus eliminating more runtime errors. 
-
 Here is a small example from `GHC` [manual](https://ghc.readthedocs.io) that provides a way of defining sort of an accessor with convenient type level _String_ (`Symbol`) 
 ```
 {-# LANGUAGE DataKinds               #-}
