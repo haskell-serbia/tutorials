@@ -189,8 +189,8 @@ First we will look at some pseudo code so we can explain easier what is going on
 Sigma type is like a tuple but with some caviats
 
 ```
-     (A     , B) 
-Σ :: (x :: A) B(x)
+  (A     , B) 
+Σ (x :: A) B(x)
     
 ```
 Here `x` is of type `A` and we are able to use it inside some type level function `B(x)`.
@@ -198,7 +198,7 @@ Here `x` is of type `A` and we are able to use it inside some type level functio
 One possible sigma type could be
 
 ```
-Σ :: (x :: Bool) (if x then Int else String) -- this if statement can be implemented as a type family in haskell
+Σ (x :: Bool) (if x then Int else String) -- this if statement can be implemented as a type family in haskell
 
 -- possible values
 (True, 42)
@@ -231,8 +231,8 @@ How cool is that!
 Let's look at the definition
 
 ```
-      A   ->  B
-Σ :: (x :: A) B(x)
+    A   ->  B
+Π  (x :: A) B(x)
 ```
 The type of the result of the `B` will depend on its input.
 ```
