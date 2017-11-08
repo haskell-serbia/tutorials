@@ -224,7 +224,7 @@ As soon as we pattern match we are able to use local assumptions about `y` which
 How cool is that!
 
 
-**∑** is type level generalization of a `Sum` types - it is a sum of all possible first components of a tuple (True + False in our case).
+**∑** is type level generalization of a sum types - it is a sum of all possible first components of a tuple (True + False in our case).
 
 **Π** is type level generalization of `Product` types.
 
