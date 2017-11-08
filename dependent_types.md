@@ -72,13 +72,12 @@ After that we get to the second step which is
 Example:
 
 ```
-max :: Integer
-max :: Double
+maxBound :: Int
+maxBound :: Double
 ```
 
-We can look at this as if type is determining the values which constant `max` can hold. This is a basic relation between values and types, values need to be of some type in Haskell.
+We can see here that the type is determining the values `maxBound` will have. Values depend on the type they are instantiated with so the type to the right of the `::` determines the values to the left of the `::`.
 
-Third step in our wonderfull type land is 
 
 **Types depending on Types** (_type functions_)
 
