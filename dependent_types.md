@@ -52,7 +52,7 @@ Type level data is something that lives on the level of types but is not a type.
 
 ## Lambda Cube
 
-[Lambda Cube](https://en.wikipedia.org/wiki/Lambda_cube) is the term from Type Theory and Math Logic. It builds on top of [lambda calculus](https://en.wikipedia.org/wiki/Lambda_calculus) defining all possible type systems where each axes is the new abstraction. So going in some order from simple to more complex systems we first arrive to what every programming language has :
+Haskell is based on concepts from Category Theory, Type Theory, Math Logic etc. [Lambda Cube](https://en.wikipedia.org/wiki/Lambda_cube) is the framework for exploring the forms of abstraction. Going in some order from simple to more complex systems we first arrive to what every programming language has :
 
 **Values depending on values** (_functions_)
 - This simply means that you have some sort of relation between variables if they are used in terms of each other. 
