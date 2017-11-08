@@ -81,15 +81,30 @@ We can see here that the type is determining the values `maxBound` will have. Va
 
 **Types depending on Types** (_type functions_)
 
-In order to demonstrate what we mean by this we will use Type Families. These [slides](https://cdepillabout.github.io/haskell-type-families-presentation/#/) do really good job in explaining what are type families.
+In order to demonstrate what we mean by this we will use Type Families. 
 
-Basically they provide a way to define a function that operates on types. Depending on the concrete implementation we can return different types for different instances of the typeclass or at least we have that choice.
+Type Families provide a way to define a type constructor with all possible types that can be used in place of polimorphic type parameter.
+Here is an example from Haskell [wiki](https://wiki.haskell.org/Haskell)
+
+```
+-- Declare a list-like data family
+data family XList a
+ 
+-- Declare a list-like instance for Char
+data instance XList Char = XCons !Char !(XList Char) | XNil
+ 
+-- Declare a number-like instance for ()
+data instance XList () = XListUnit !Int
+```
+The difference between vanilla parametrised type constructors and family constructors is much like between parametrically polymorphic functions and (ad-hoc polymorphic) methods of type classes.
+
+Here we are providing two instances of the same data type. One is used when using `Char` for the type constructor parameter and the other one when using  `()`. Using Type Families we can say that type used as a parameter to a type constructor determines what kind of type we will be able to construct - so type depending on another type. 
 
 This leads us to the final step to dependent types which is: 
 
 **Types depending on Values** (_dependent types_)
 
-As I mentioned at the beginning Haskell still does not have native support for dependent types but we have a handfull of extensions that provide a way to touch on that. We are now arriving to the next step in understanding dependent types which is
+As I mentioned at the beginning Haskell still does not have native support for dependent types but we have a handful of extensions that provide a way to touch on that. We are now arriving to the next step in understanding dependent types which is
 
 ## Local Assumptions
 
