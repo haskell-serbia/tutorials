@@ -52,7 +52,7 @@ Here type `Label` accepts a type parameter `l` which must be of type `Symbol`. T
 
 ## Lambda Cube
 
-[Lambda Cube](https://en.wikipedia.org/wiki/Lambda_cube) is the framework for exploring the forms of abstraction. It explores relation of terms/types and starting in some order from simple lambda calculus to calculus of constructions (higher-order dependently typed polymorphic lambda calculus) we first arrive to what every programming language has :
+[Lambda Cube](https://en.wikipedia.org/wiki/Lambda_cube) is the framework for exploring the forms of abstraction. Starting in some order from simple lambda calculus to calculus of constructions (higher-order dependently typed polymorphic lambda calculus) we first arrive to what every programming language has :
 
 **Values depending on values** (_functions_)
 - This simply means that you have some sort of relation between variables if they are used in terms of each other. 
