@@ -42,34 +42,13 @@ In contrast to this types can also contain _type level data_. That is the data t
 
 Haskell is famous for its _If it compiles - it works_ approach, which is very true but we are haskellers - we always want more type safety and abstraction right ? 
 
-Here is a small example from `GHC` [manual](https://ghc.readthedocs.io) that provides a way of defining sort of an accessor with convenient type level _String_ (`Symbol`) 
+Here is a small example that provides a way of defining a type level _String_ (`Symbol`)
+
 ```
-{-# LANGUAGE DataKinds               #-}
-{-# LANGUAGE KindSignatures          #-}
-{-# LANGUAGE MultiParamTypeClasses   #-}
-{-# LANGUAGE FunctionalDependencies  #-}
-{-# LANGUAGE FlexibleInstances       #-}
-module Main where
-
-import GHC.TypeLits
-
 data Label (l :: Symbol) = Get
-data Point = Point Int Int deriving Show
-
-class Has a l b | a l -> b where
-  from :: a -> Label l -> b
-
-instance Has Point "x" Int
-    where from (Point x _) _ = x
-
-instance Has Point "y" Int
-    where from (Point _ y) _ = y
-
-example :: Int
-example = from (Point 1 2) (Get :: Label "x")
-
 ```
-So type level data is something that lives on the level of types but is not a type.
+
+Type level data is something that lives on the level of types but is not a type.
 
 ## Lambda Cube
 
