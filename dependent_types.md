@@ -30,7 +30,7 @@ You can ignore kinds for now, they are to types what types are to terms - so lik
 We can also say something that applies to standard Haskell (without extensions) and that is that terms are present at runtime while types get erased at runtime. This statement is not true when it comes to dependent types but it serves well in the path of our understanding of the topic.
 
 ## Type level data
-We can say for a type that it has a set of possible values that correspond to it. So `Void` is a type with zero inhabitants - empty set , `unit` has a single element set (`()`) , `Bool` has two element set (`True` and `False`) and so on. Here is a small example of this
+We can say for a type that it has a set of possible values that correspond to it. So `Void` is a type with zero inhabitants - empty set , `Unit` has a single element set (`()`) , `Bool` has two element set (`True` and `False`) and so on. Here is a small example of this
 
 ```
 data Void 
@@ -48,11 +48,11 @@ Here is a small example that provides a way of defining a type level _String_ (`
 data Label (l :: Symbol) = Get
 ```
 
-Type level data is something that lives on the level of types but is not a type.
+Here type `Label` accepts a type parameter `l` which must be of type `Symbol`. Type level data is something that lives on the level of types but is not a type.
 
 ## Lambda Cube
 
-Haskell is based on concepts from Category Theory, Type Theory, Math Logic etc. [Lambda Cube](https://en.wikipedia.org/wiki/Lambda_cube) is the framework for exploring the forms of abstraction. Going in some order from simple to more complex systems we first arrive to what every programming language has :
+[Lambda Cube](https://en.wikipedia.org/wiki/Lambda_cube) is the framework for exploring the forms of abstraction. It explores relation of terms/types and starting in some order from simple lambda calculus to calculus of constructions (higher-order dependently typed polymorphic lambda calculus) we first arrive to what every programming language has :
 
 **Values depending on values** (_functions_)
 - This simply means that you have some sort of relation between variables if they are used in terms of each other. 
