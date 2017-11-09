@@ -268,16 +268,27 @@ Ok enough with the theory, let's look at a "simple" example using real code and 
 We will use dependent types to prevent wrong behaviour of a simple web app.
 
 ```
+{-# LANGUAGE DataKinds #-}
+{-# LANGUAGE KindSignatures #-}
+{-# LANGUAGE MultiParamTypeClasses #-}
+{-# LANGUAGE FunctionalDependencies #-}
+{-# LANGUAGE FlexibleInstances #-}
+{-# LANGUAGE GADTs #-}
+{-# LANGUAGE TypeFamilies #-}
+{-# LANGUAGE StandaloneDeriving #-}
+
+module DepTypes where
+
 type Body = [Char]
 data Method = GET | POST
 
 data SMethod m where
-  SGET :: m ~ GET => SMethod m
-  SPOST :: m ~ POST => SMethod m
+  SGET :: m ~ 'GET => SMethod m
+  SPOST :: m ~ 'POST => SMethod m
 
-type family IfGetThenUnitElseMaybeBody (m :: Method) :: Type where
-  IfGetThenUnitElseMaybeBody GET = ()
-  IfGetThenUnitElseMaybeBody POST = Maybe Body
+type family IfGetThenUnitElseMaybeBody (m :: Method) where
+  IfGetThenUnitElseMaybeBody 'GET = ()
+  IfGetThenUnitElseMaybeBody 'POST = Maybe Body
 
 data Request m = Req (SMethod m) (IfGetThenUnitElseMaybeBody m)
 
