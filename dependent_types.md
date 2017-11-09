@@ -264,7 +264,7 @@ So what we get back from a Π type is a function. Why we say it is a product typ
  f False = "abc"
  ```
 
-Ok enough with the theory, let's look at a "simple" example using real code and singletons technique.
+Ok enough with the theory, let's look at a "simple" example using real code and singleton technique.
 We will use dependent types to prevent wrong behaviour of a simple web app.
 
 ```
