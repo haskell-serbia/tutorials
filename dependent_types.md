@@ -1,5 +1,6 @@
 # Dependent Types in Haskell
 
+*This topic is considered as advanced and some prior knowledge of Haskell is assumed althou I will provide links for the terms not explained in the article*.
 
 _Why_ ?
 
@@ -81,9 +82,9 @@ We can see here that the type is determining the values `maxBound` will have. Va
 
 **Types depending on Types** (_type functions_)
 
-In order to demonstrate what we mean by this we will use Type Families. 
+In order to demonstrate what we mean by this we will use Haskell extension called Type Family. 
 
-Type Families provide a way to define a type constructor with all possible types that can be used in place of polimorphic type parameter.
+Type Families provide a way to define multiple type constructors with different types in place of a type parameter.
 Here is an example from Haskell [wiki](https://wiki.haskell.org/Haskell)
 
 ```
@@ -96,9 +97,8 @@ data instance XList Char = XCons !Char !(XList Char) | XNil
 -- Declare a number-like instance for ()
 data instance XList () = XListUnit !Int
 ```
-The difference between vanilla parametrised type constructors and family constructors is much like between parametrically polymorphic functions and (ad-hoc polymorphic) methods of type classes.
 
-Here we are providing two instances of the same data type. One is used when using `Char` for the type constructor parameter and the other one when using  `()`. Using Type Families we can say that type used as a parameter to a type constructor determines what kind of type we will be able to construct - so type depending on another type. 
+Here we are providing two instances of the same data type. One can be constructed when using `Char` for the type constructor parameter and the other one when using  `()`. Using Type Families we can say that type used as a parameter to a type constructor determines the type we will be able to construct - so type depending on another type. 
 
 This leads us to the final step to dependent types which is: 
 
@@ -110,25 +110,23 @@ As I mentioned at the beginning Haskell still does not have native support for d
 
 GADTs or Generalized Algebraic DataTypes is the Haskell extension that provides us with _local assumptions_. What does that mean? 
 
-Well, let us look at some of the standard Haskell datatypes :
+GADTs provide us with a way to have richer return types than vanilla ADTs. If we look at the GHC manual example
 
 ```
-data Maybe a = Just a | Nothing
-data Either a b = Left a | Right b
+data Term a where
+    Lit    :: Int -> Term Int
+    Succ   :: Term Int -> Term Int
+    IsZero :: Term Int -> Term Bool
+    If     :: Term Bool -> Term a -> Term a -> Term a
+    Pair   :: Term a -> Term b -> Term (a,b)
 ```
-If we rewrote these types with hypotetical syntax we would come to this:
+We notice that the return type is not always `Term a` as it would be with normal ADTs. When pattern matching on type constructors that are constructed using GADTs syntax we are able to have type refinement to specific constructor so `a` can be refined to `Int` in following function
+
 ```
-data Maybe a = Just a
-     Maybe a = Nothing
-
-data Either a b = Left a
-     Either a b = Right b
+eval :: Term a -> a
+eval Lit a = ...
 ```
-and this can inform us that we are really limited with what we do on left side of the `=` sign. 
-
-Problem with this is that we don't get to do pattern matching on the type constructors which in turn means that we can only have free type variables on the left side.
-
-This is where *GADTs* language extension comes to play. It allows us to define type contraints on the type variable which limits the possible type variables that can be used to construct a type and later in the code have *local assumptions* when pattern matching on the data constructor which was used to constuct a type. 
+When pattern matching on type constructor using GADTs we get assumption that the type was constructed with certain type parameter/s. This is what we also get with data families but difference is that we get _local_ assumptions since we are able to use pattern matching in functions that are not typeclass methods.
 
 Lets take a look at some example code:
 
@@ -141,18 +139,11 @@ This is desugared version of the more convenient syntax that we usually use
 
 ```
 data IntOrString a where
-    IntConstructor    :: Int    -> IntOrString a
-    StringConstructor :: String -> IntOrString a
+    IntConstructor    :: Int    -> IntOrString Int
+    StringConstructor :: String -> IntOrString Int
 ```
 
-The classic `Maybe` datatype would look like this if written with GADTs
-
-```
-data Maybe a where
-    Just    :: a -> Maybe a
-    Nothing :: Maybe a
-```
-And here is example of the pattern match:
+Here is example of the pattern match:
 
 ```
 wasItStringOrInt :: IntOrString a -> String
@@ -160,18 +151,18 @@ wasItStringOrInt x =
     case x of
         -- Local assumptions - Local because it is limited to only one case branch 
         -- and assumption because we assume what type is our type parameter
-        IntConstructor a    -> "Constructed with Int"      -- a ~ Int
-        StringConstructor b -> "Constructed with String    -- a ~ String
+        IntConstructor a    -> show (a + 1)  -- a ~ Int
+        StringConstructor b -> reverse b     -- a ~ String
         
 -- ghci
 λ> let x = IntConstructor 42
 λ> wasItStringOrInt x
-"Constructed with Int"
+43
 ```
 
 ## Generic
 
-Lets now build our intuition about types in general and also dependent types.
+Let us now build our intuition about types in general and also dependent types.
 
 If we look at a normal Haskell Algebraic Data Type `T`
 
@@ -182,7 +173,7 @@ data T = A Int Int
   | D
 ```
 
-We can say that `T` is a sum of products `A B C D`. In order to understand sum we can define this and every other ADT only using
+We can say that `T` is a [sum](https://www.schoolofhaskell.com/school/to-infinity-and-beyond/pick-of-the-week/sum-types) of products `A B C D`. In order to understand sum we can define this and every other ADT only using
 `Either`, `() (unit)` , `(,) tuple`  and function type. So our ADT could be encoded like this using infix notation
 
 ```
