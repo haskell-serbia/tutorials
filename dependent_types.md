@@ -181,19 +181,19 @@ data T = A Int Int
 <sub>Haskell is among small number of languages equiped with sum types. Read about them [here](https://www.schoolofhaskell.com/school/to-infinity-and-beyond/pick-of-the-week/sum-types) .</sub>
 
 We can say that `T` is a sum of products `A B C D`. In order to understand sum we can define this and every other ADT only using
-`Either`, `() (unit)` , `(,) tuple`  and function type. So our ADT could be encoded like this using infix notation
+`Either`, `() (unit)` , `(,) tuple`  and `((->) r )` function type. So our ADT could be encoded like this using infix notation
 
 ```
 type T' = (Int, Int) `Either` (String, String, String) `Either` ((), Void) `Either` ()
 ```
 
-Tuples provide us with products, Either provides us with sums, unit is empty constructor and function type is just a built in function. 
+Tuples provide us with products, Either provides us with sums, unit is empty constructor and function type can take type/value and yield new type/value. 
 
 If we understand these simple types than we understand Algebraic Data Types.
 
 If we understand Σ (sigma) and Π (pi) we understand dependent types. 
 
-You can see the theory behing all of this [here](https://en.wikipedia.org/wiki/Intuitionistic_type_theory) .
+<sub>You can read about the theory behing all of this [here](https://en.wikipedia.org/wiki/Intuitionistic_type_theory) .</sub>
 
 ## Σ and Π
 
@@ -224,16 +224,16 @@ f :: ∑ (x :: Bool) (if x then Int else String) -> String
 f (x,y) = ???
 ```
 So now we have a function from `sigma` to `String` , we know that `x` is of type `Bool` but we have no idea what `y` is .
-What can we do with it ?
+What can we do with it?
 We can pattern match on it!
 
 ```
 f :: (x :: Bool) (if x then Int else String) -> String
 f (x,y) = case x of
-  True -> show y -- if x is True then y ~ Int
-  False -> y     -- if x is False then y ~ String
+  True -> show y -- if x is True then y :: Int
+  False -> y     -- if x is False then y :: String
 ```
-As soon as we pattern match we are able to use local assumptions about `y` which is a term level data and we know that `y` can be either `Int` or `String`. Any other type would have caused compile time error and in this way we are able to prevent our programs from working with some random types that we don't want and prove that our program is correct at compile time!
+As soon as we pattern match we are able to use local assumptions about `y` which is the term level data and we know that `y` can be either of type `Int` or of type `String`. Any other type would have caused compile time error and in this way we are able to prevent our program from working with types we don't want and prove that our program is correct at compile time!
 How cool is that!
 
 
@@ -247,13 +247,16 @@ Let's look at the definition
     A   ->  B
 Π  (x :: A) B(x)
 ```
+
 The type of the result of the `B` will depend on its input.
+
 ```
 f :: Π (x :: Bool) (if x then Int else String) -> String
 f x = case x of
   True -> 42
   False -> "abc"  
 ```
+
 So what we get back from a Π type is a function. Why we say it is a product type ? You can think of it like this - you are able to get back values from a Π type which is not a case for the ∑ type. ∑ type can have as a return type one of the case branches while from Π you can extract values much like from a product type in Haskell
 
  ```
@@ -261,4 +264,23 @@ So what we get back from a Π type is a function. Why we say it is a product typ
  f False = "abc"
  ```
 
-Ok enough with the theory you say, let's look at a simple example using real code
+Ok enough with the theory, let's look at a "simple" example using real code and singletons technique.
+We will use dependent types to prevent wrong behaviour of a simple web app.
+
+```
+type Body = [Char]
+data Method = GET | POST
+
+data SMethod m where
+  SGET :: m ~ GET => SMethod m
+  SPOST :: m ~ POST => SMethod m
+
+type family IfGetThenUnitElseMaybeBody (m :: Method) :: Type where
+  IfGetThenUnitElseMaybeBody GET = ()
+  IfGetThenUnitElseMaybeBody POST = Maybe Body
+
+data Request m = Req (SMethod m) (IfGetThenUnitElseMaybeBody m)
+
+```
+
+
