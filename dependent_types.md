@@ -126,7 +126,7 @@ We notice that the return type is not always `Term a` as it would be with normal
 eval :: Term a -> a
 eval Lit a = ...
 ```
-When pattern matching on type constructor using GADTs we get assumption that the type was constructed with certain type parameter/s. This is what we also get with data families but difference is that we get _local_ assumptions since we are able to use pattern matching in functions that are not typeclass methods.
+When pattern matching on type constructor using GADTs we get assumption that the type was constructed with certain type parameter/s. This is what we also get with data families but difference is that we get _local_ assumptions since we are able to use pattern matching on polimorphic type variables in functions that are not typeclass methods.
 
 Lets take a look at some example code:
 
@@ -146,21 +146,27 @@ data IntOrString a where
 Here is example of the pattern match:
 
 ```
-wasItStringOrInt :: IntOrString a -> String
-wasItStringOrInt x =
-    case x of
-        -- Local assumptions - Local because it is limited to only one case branch 
-        -- and assumption because we assume what type is our type parameter
-        IntConstructor a    -> show (a + 1)  -- a ~ Int
-        StringConstructor b -> reverse b     -- a ~ String
+wasItStringOrInt :: IntOrString a -> IntOrString b -> [Char]
+wasItStringOrInt x y =
+-- Local assumptions - Local because it is limited to only one case branch
+-- and assumption because we can assume of what type is our type parameter
+  case x of
+    IntConstructor x' -> case y of
+      IntConstructor   y'  -> show $ x' + y'    -- x ~ Int y ~ Int
+      StringConstructor y' -> (show x') ++  y'  -- x ~ Int y ~ String
+    StringConstructor x' -> case y of
+      IntConstructor    y' -> x' ++ (show y')   -- x ~ String y ~ Int
+      StringConstructor y' -> x' ++ y'          -- x ~ String y ~ String
+
         
 -- ghci
-λ> let x = IntConstructor 42
-λ> wasItStringOrInt x
-43
+λ> let xx = IntConstructor  (42 :: Int)
+λ> let yy = StringConstructor "Haskell rocks!"
+λ> wasItStringOrInt  yy xx
+"Haskell rocks!42"
 ```
 
-## Generic
+## Generic programming
 
 Let us now build our intuition about types in general and also dependent types.
 
@@ -172,8 +178,9 @@ data T = A Int Int
   | C () Void
   | D
 ```
+<sub>Haskell is among small number of languages equiped with sum types. Read about them [here](https://www.schoolofhaskell.com/school/to-infinity-and-beyond/pick-of-the-week/sum-types) .</sub>
 
-We can say that `T` is a [sum](https://www.schoolofhaskell.com/school/to-infinity-and-beyond/pick-of-the-week/sum-types) of products `A B C D`. In order to understand sum we can define this and every other ADT only using
+We can say that `T` is a sum of products `A B C D`. In order to understand sum we can define this and every other ADT only using
 `Either`, `() (unit)` , `(,) tuple`  and function type. So our ADT could be encoded like this using infix notation
 
 ```
