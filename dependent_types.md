@@ -1,6 +1,6 @@
 # Dependent Types in Haskell
 
-*This topic is considered as advanced and some prior knowledge of Haskell is assumed althou I will provide links for the terms not explained in the article*.
+*This topic is considered as advanced and some prior knowledge of Haskell is assumed although I will provide links for the terms not explained in the article*.
 
 _Why_ ?
 
