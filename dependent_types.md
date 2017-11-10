@@ -276,22 +276,33 @@ We will use dependent types to prevent wrong behaviour of a simple web app.
 {-# LANGUAGE GADTs #-}
 {-# LANGUAGE TypeFamilies #-}
 {-# LANGUAGE StandaloneDeriving #-}
+{-# LANGUAGE TypeInType #-}
 
-module DepTypes where
+module Main where
+import Data.Kind
+
 
 type Body = [Char]
-data Method = GET | POST
+data Method = GET | POST  deriving Show
 
 data SMethod m where
-  SGET :: m ~ 'GET => SMethod m
+  SGET  :: m ~ 'GET  => SMethod m
   SPOST :: m ~ 'POST => SMethod m
 
-type family IfGetThenUnitElseMaybeBody (m :: Method) where
+deriving instance Show (SMethod m)
+
+type family IfGetThenUnitElseMaybeBody (m :: Method) :: Type where
   IfGetThenUnitElseMaybeBody 'GET = ()
   IfGetThenUnitElseMaybeBody 'POST = Maybe Body
 
+
 data Request m = Req (SMethod m) (IfGetThenUnitElseMaybeBody m)
 
+correctMethod :: m -> ((IfGetThenUnitElseMaybeBody m ) -> Request m)
+correctMethod m = Req m
+
+main :: IO ()
+main = return ()
 ```
 
 
