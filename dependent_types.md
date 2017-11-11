@@ -1,10 +1,10 @@
 # Dependent Types in Haskell
 
-*This topic is considered as advanced and some prior knowledge of Haskell is assumed although I will provide links for the terms not explained in the article*.
+*This topic is considered as advanced and some prior knowledge of Haskell is assumed although I will try to provide links for the terms not explained in the article*.
 
 _Why_ ?
 
-Dependent types help to form a proof that the most critical features work the way we want them and all that in compile time. We form very specific types that ensure all invariants program can have will work properly. 
+Dependent types help to form a proof that the most critical features work the way we want them and all that in compile time. We can form very specific types that ensure all invariants program can have will work properly. 
 
 Dependent types use type level functions that are reduced using term level data.
 
@@ -193,7 +193,7 @@ If we understand these simple types than we understand Algebraic Data Types.
 
 If we understand Σ (sigma) and Π (pi) we understand dependent types. 
 
-<sub>You can read about the theory behing all of this [here](https://en.wikipedia.org/wiki/Intuitionistic_type_theory) .</sub>
+<sub>You can read about the theory behind all of this [here](https://en.wikipedia.org/wiki/Intuitionistic_type_theory) .</sub>
 
 ## Σ and Π
 
