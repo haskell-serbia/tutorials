@@ -340,12 +340,18 @@ Linking .stack-work/dist/x86_64-osx/Cabal-1.24.2.0/build/ ...
 xxx-0.1.0.0: copy/register
 Installing executable(s) 
 ```
-And run it
+And test it in ghci session
 
 ```
-let a = mkValidRequest GET
+λ> :m Data.Either Main 
+λ> let x = mkValidRequest GET
+λ> isLeft x
+True
+λ> isRight x
+False
+λ> 
 ```
-When reduced `a` would be of type `Request 'GET`.
+When reduced `a` would be of type `Left Request 'GET`.
 
 Now let's change something so that we return string "get" in case of `GET` request instead of `()`
 
