@@ -4,7 +4,7 @@
 
 _Why_ ?
 
-Dependent types help to form a proof that the most critical features work the way we want them and all that in compile time. We can form very specific types that ensure all invariants program can have will work properly. 
+Dependent types help to form a proof that the most critical features work the way we want them and all that in compile time. We can form specific set of types that will ensure all invariants program can have will work properly. 
 
 Dependent types use type level functions that are reduced using term level data.
 
@@ -28,7 +28,7 @@ term :: type :: kind
 ```
 You can ignore kinds for now, they are to types what types are to terms - so like type of a type constructor. You can think of them as _types one level up_. Read about kinds [here](https://wiki.haskell.org/Kind)
 
-We can also say something that applies to standard Haskell (without extensions) and that is that terms are present at runtime while types get erased at runtime. This statement is not true when it comes to dependent types but it serves well in the path of our understanding of the topic.
+We can say something that applies to standard Haskell (without extensions) and that is that terms are present at runtime while types get erased at runtime. This statement is not true when it comes to dependent types but it serves well in the path of our understanding of the topic.
 
 ## Type level data
 We can say for a type that it has a set of possible values that correspond to it. So `Void` is a type with zero inhabitants - empty set , `Unit` has a single element set (`()`) , `Bool` has two element set (`True` and `False`) and so on. Here is a small example of this
