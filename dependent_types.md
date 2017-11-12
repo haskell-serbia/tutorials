@@ -26,9 +26,10 @@ First one would be that if you look at a type/kind annotation:
 ```
 term :: type :: kind
 ```
+_term_ is the thing to the left of the type annotation (`::`) and _type_ is to the right of it.
 You can ignore kinds for now, they are to types what types are to terms - so like type of a type constructor. You can think of them as _types one level up_. Read about kinds [here](https://wiki.haskell.org/Kind)
 
-We can say something that applies to standard Haskell (without extensions) and that is that terms are present at runtime while types get erased at runtime. This statement is not true when it comes to dependent types but it serves well in the path of our understanding of the topic.
+We can also say something that applies to standard Haskell (without extensions) and that is that terms are present at runtime while types get erased at runtime. This statement is not true when it comes to dependent types but it serves well in the path of our understanding of the topic.
 
 ## Type level data
 We can say for a type that it has a set of possible values that correspond to it. So `Void` is a type with zero inhabitants - empty set , `Unit` has a single element set (`()`) , `Bool` has two element set (`True` and `False`) and so on. Here is a small example of this
@@ -40,8 +41,6 @@ data Bool = True | False
 ```
 
 In contrast to this types can also contain _type level data_. That is the data that lives on the type level and does not have associated set of inhabitants. 
-
-Haskell is famous for its _If it compiles - it works_ approach, which is very true but we are haskellers - we always want more type safety and abstraction right ? 
 
 Here is a small example that provides a way of defining a type level _String_ (`Symbol`)
 
@@ -82,7 +81,7 @@ We can see here that the type is determining the values `maxBound` will have. Va
 
 **Types depending on Types** (_type functions_)
 
-In order to demonstrate what we mean by this we will use Haskell extension called Type Family. 
+In order to demonstrate what we mean by this we will use Haskell extension called Type Families. 
 
 Type Families provide a way to define multiple type constructors with different types in place of a type parameter.
 Here is an example from Haskell [wiki](https://wiki.haskell.org/Haskell)
@@ -99,6 +98,8 @@ data instance XList () = XListUnit !Int
 ```
 
 Here we are providing two instances of the same data type. One can be constructed when using `Char` for the type constructor parameter and the other one when using  `()`. Using Type Families we can say that type used as a parameter to a type constructor determines the type we will be able to construct - so type depending on another type. 
+
+Haskell is famous for its _If it compiles - it works_ approach, which is very true but we are haskellers - we always want more type safety and abstraction. 
 
 This leads us to the final step to dependent types which is: 
 
@@ -124,9 +125,15 @@ We notice that the return type is not always `Term a` as it would be with normal
 
 ```
 eval :: Term a -> a
-eval Lit a = ...
+eval Lit a = ... 
 ```
-When pattern matching on type constructor using GADTs we get assumption that the type was constructed with certain type parameter/s. This is what we also get with data families but difference is that we get _local_ assumptions since we are able to use pattern matching on polimorphic type variables in functions that are not typeclass methods.
+Since pattern matching reduced to this branch and return type is `Term Int` 
+
+```
+Lit    :: Int -> Term Int
+```
+
+When pattern matching on type constructor using GADTs we get assumption that the type was constructed with certain type parameter/s. This is what we also get with data families but difference is that we get _local_ assumptions since we are able to use pattern matching on polymorphic type variables , so all possible results defined in GADt since they have fixed set of constructors.
 
 Lets take a look at some example code:
 
@@ -178,7 +185,7 @@ data T = A Int Int
   | C () Void
   | D
 ```
-<sub>Haskell is among small number of languages equiped with sum types. Read about them [here](https://www.schoolofhaskell.com/school/to-infinity-and-beyond/pick-of-the-week/sum-types) .</sub>
+<sub>Haskell is among small number of languages equipped with sum types. Read about them [here](https://www.schoolofhaskell.com/school/to-infinity-and-beyond/pick-of-the-week/sum-types) .</sub>
 
 We can say that `T` is a sum of products `A B C D`. In order to understand sum we can define this and every other ADT only using
 `Either`, `() (unit)` , `(,) tuple`  and `((->) r )` function type. So our ADT could be encoded like this using infix notation
@@ -199,7 +206,7 @@ If we understand Σ (sigma) and Π (pi) we understand dependent types.
 
 First we will look at some pseudo code so we can explain easier what is going on and after that we will take a look at the example that actually compiles.
 
-Sigma type is like a tuple but with some caviats
+Sigma type is like a tuple but with some caveats
 
 ```
   (A     , B) 
@@ -264,8 +271,8 @@ So what we get back from a Π type is a function. Why we say it is a product typ
  f False = "abc"
  ```
 
-Let us look at the example of some fictive web application.
-We will use dependent types to prevent wrong behaviour at compile time. Let's imagine we have the option to create either `GET` or `POST` 
+Let us now look at the example of some fictive web application.
+We will use dependent types to prevent wrong behavior at compile time. Let's imagine we have the option to create either `GET` or `POST` 
 request. `GET` request can contain only unit `()` and `POST` request only `Maybe Body`. We will encode this in such way that we will not be able to compile program that does not do what is described.
 
 ```
@@ -298,7 +305,9 @@ deriving instance Show (SMethod m)
 type family IfGetThenUnitElseMaybeBody (m :: Method) :: Type where
   IfGetThenUnitElseMaybeBody 'GET = ()
   IfGetThenUnitElseMaybeBody 'POST = Maybe Body
-
+  
+-- this type should remind you of our ∑ type 
+-- Σ (x :: Bool) (if x then Int else String) 
 data Request m =
   Req (SMethod m)
       (IfGetThenUnitElseMaybeBody m)
@@ -310,17 +319,17 @@ mkSMethod m =
         GET  -> Left SGET
         POST -> Right SPOST
 
-mkValidRequest :: Method -> IO (Either (Request 'GET) (Request 'POST))
+mkValidRequest :: Method -> Either (Request 'GET) (Request 'POST)
 mkValidRequest m = do
   let requestBody = (Just "POST BODY" :: Maybe Body)
   let sm = mkSMethod m
   case sm of
     Left  SGET  -> do
         let x = Req SGET ()
-        return $ Left x
+        Left x
     Right SPOST -> do
         let y = Req SPOST requestBody
-        return $ Right y
+        Right y
 
 main :: IO ()
 main = return ()
@@ -359,10 +368,10 @@ Main.hs:48:26: error:
 
 The same thing would happen in case we try to return anything else except `()` for `GET` and `Maybe Body` for `POST` request.
 Now we see from this simple example why dependent types are considered excellent tool when program correctness is of ultimate importance.
-There is no funky runtime behaviour, our app will blow up in our face at compile time if we don't write the only correct version of the program.
+There is no funky runtime behavior, our app will blow up in our face at compile time if we don't write the only correct version of the program.
 
-I agree this looks cumbersome and involves a lot of boilerplate (this is from perspective of a haskeller, java programmers will not notice anything :) ) but currently this is the only way to mimmick dependent types until they are a part of the language.
+I agree this looks cumbersome and involves a lot of boilerplate (this is from perspective of a Haskeller, Java programmers will not notice anything :) ) but currently this is the only way to mimic dependent types until they are a part of the language.
 
 
-Concepts described here are hard and in case you could not follow all don't beat your self up. Haskell can be hard as it is without language extensions. Read online resources and try again until it "sinks in". Most of us don't not write programs for NASA everyday and Haskell Type System is already powerfull enough even without dependent types. That said it doesen't mean you should not explore and play with different concepts that will probably be really important in the future.
+Concepts described here are hard and in case you could not follow all don't beat your self up. Haskell can be hard as it is without language extensions. Read online resources and try again until it "sinks in". Most of us don't write programs for NASA everyday and Haskell Type System is already powerful enough even without dependent types. That said it doesn't mean you should not explore and play with different concepts that will probably be really important in the future.
 
