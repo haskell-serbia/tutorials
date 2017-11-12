@@ -264,8 +264,9 @@ So what we get back from a Π type is a function. Why we say it is a product typ
  f False = "abc"
  ```
 
-Ok enough with the theory, let's look at a "simple" example using real code and singleton technique.
-We will use dependent types to prevent wrong behaviour of a simple web app.
+Let us look at the example of some fictive web application.
+We will use dependent types to prevent wrong behaviour at compile time. Let's imagine we have the option to create either `GET` or `POST` 
+request. `GET` request can contain only unit `()` and `POST` request only `Maybe Body`. We will encode this in such way that we will not be able to compile program that does not do what is described.
 
 ```
 {-# LANGUAGE DataKinds #-}
@@ -276,14 +277,17 @@ We will use dependent types to prevent wrong behaviour of a simple web app.
 {-# LANGUAGE GADTs #-}
 {-# LANGUAGE TypeFamilies #-}
 {-# LANGUAGE StandaloneDeriving #-}
-{-# LANGUAGE TypeInType #-}
 
 module Main where
+
 import Data.Kind
 
-
 type Body = [Char]
-data Method = GET | POST  deriving Show
+
+data Method
+  = GET
+  | POST
+  deriving (Show)
 
 data SMethod m where
   SGET  :: m ~ 'GET  => SMethod m
@@ -295,14 +299,70 @@ type family IfGetThenUnitElseMaybeBody (m :: Method) :: Type where
   IfGetThenUnitElseMaybeBody 'GET = ()
   IfGetThenUnitElseMaybeBody 'POST = Maybe Body
 
+data Request m =
+  Req (SMethod m)
+      (IfGetThenUnitElseMaybeBody m)
 
-data Request m = Req (SMethod m) (IfGetThenUnitElseMaybeBody m)
 
-correctMethod :: m -> ((IfGetThenUnitElseMaybeBody m ) -> Request m)
-correctMethod m = Req m
+mkSMethod :: Method -> Either (SMethod 'GET) (SMethod 'POST)
+mkSMethod m =
+    case m of
+        GET  -> Left SGET
+        POST -> Right SPOST
+
+mkValidRequest :: Method -> IO (Either (Request 'GET) (Request 'POST))
+mkValidRequest m = do
+  let requestBody = (Just "POST BODY" :: Maybe Body)
+  let sm = mkSMethod m
+  case sm of
+    Left  SGET  -> do
+        let x = Req SGET ()
+        return $ Left x
+    Right SPOST -> do
+        let y = Req SPOST requestBody
+        return $ Right y
 
 main :: IO ()
 main = return ()
+
+```
+We can compile this
+
+```
+[1 of 1] Compiling Main      
+Linking .stack-work/dist/x86_64-osx/Cabal-1.24.2.0/build/ ...
+xxx-0.1.0.0: copy/register
+Installing executable(s) 
 ```
 
+Now let's change something so that we return string "get" in case of `GET` request instead of `()`
+
+```
+-- let x = Req SGET ()
+let x = Req SGET "get"
+```
+
+If we try to compile this we will get a type error
+
+```
+[1 of 1] Compiling Main 
+Main.hs:48:26: error:
+    • Couldn't match type ‘()’ with ‘[Char]’
+      Expected type: IfGetThenUnitElseMaybeBody 'GET
+        Actual type: [Char]
+    • In the second argument of ‘Req’, namely ‘"get"’
+      In the expression: Req SGET "get"
+      In an equation for ‘x’: x = Req SGET "get"
+
+    Process exited with code: ExitFailure 1
+```
+
+The same thing would happen in case we try to return anything else except `()` for `GET` and `Maybe Body` for `POST` request.
+Now we see from this simple example why dependent types are considered excellent tool when program correctness is of ultimate importance.
+There is no funky runtime behaviour, our app will blow up in our face at compile time if we don't write the only correct version of the program.
+
+I agree this looks cumbersome and involves a lot of boilerplate (this is from perspective of a haskeller, java programmers will not notice anything :) ) but currently this is the only way to mimmick dependent types until they are a part of the language.
+
+
+Concepts described here are hard and in case you could not follow all don't beat your self up. Haskell can be hard as it is without language extensions. Read online resources and try again until it "sinks in". Most of us don't not write programs for NASA everyday and Haskell Type System is already powerfull enough even without dependent types. That said it doesen't mean you should not explore and play with different concepts that will probably be really important in the future.
 
