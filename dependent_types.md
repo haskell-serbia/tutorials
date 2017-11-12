@@ -318,18 +318,15 @@ mkSMethod m =
     case m of
         GET  -> Left SGET
         POST -> Right SPOST
-
+        
 mkValidRequest :: Method -> Either (Request 'GET) (Request 'POST)
 mkValidRequest m = do
   let requestBody = (Just "POST BODY" :: Maybe Body)
   let sm = mkSMethod m
   case sm of
-    Left  SGET  -> do
-        let x = Req SGET ()
-        Left x
-    Right SPOST -> do
-        let y = Req SPOST requestBody
-        Right y
+    Left  SGET  -> Left $ Req SGET ()
+    Right SPOST -> Right $ Req SPOST requestBody
+
 
 main :: IO ()
 main = return ()
@@ -343,6 +340,12 @@ Linking .stack-work/dist/x86_64-osx/Cabal-1.24.2.0/build/ ...
 xxx-0.1.0.0: copy/register
 Installing executable(s) 
 ```
+And run it
+
+```
+let a = mkValidRequest GET
+```
+When reduced `a` would be of type `Request 'GET`.
 
 Now let's change something so that we return string "get" in case of `GET` request instead of `()`
 
