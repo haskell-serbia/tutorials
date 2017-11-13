@@ -36,19 +36,20 @@ We can say for a type that it has a set of possible values that correspond to it
 
 ```
 data Void 
-data Unit = ()
+data Unit = U -- unit is built-in type and its actual definition is data () = () 
 data Bool = True | False
 ```
 
 In contrast to this types can also contain _type level data_. That is the data that lives on the type level and does not have associated set of inhabitants. 
 
-Here is a small example that provides a way of defining a type level _String_ (`Symbol`)
+Here is a small example that provides a way of defining a type level _String_ (`Symbol`) 
 
 ```
-data Label (l :: Symbol) = Get
+type Greetings = "Hello" :: Symbol
+data Label Greetings = Get
 ```
 
-Here type `Label` accepts a type parameter `l` which must be of type `Symbol`. Type level data is something that lives on the level of types but is not a type.
+Here type `Label` accepts a type parameter which must be of type `Symbol`. Type level data is something that lives on the level of types but is not a type.
 
 ## Lambda Cube
 
@@ -83,7 +84,7 @@ We can see here that the type is determining the values `maxBound` will have. Va
 
 In order to demonstrate what we mean by this we will use Haskell extension called Type Families. 
 
-Type Families provide a way to define multiple type constructors with different types in place of a type parameter.
+Type Families provide pattern matching on a type parameter.
 Here is an example from Haskell [wiki](https://wiki.haskell.org/Haskell)
 
 ```
@@ -95,9 +96,19 @@ data instance XList Char = XCons !Char !(XList Char) | XNil
  
 -- Declare a number-like instance for ()
 data instance XList () = XListUnit !Int
+
+
 ```
 
-Here we are providing two instances of the same data type. One can be constructed when using `Char` for the type constructor parameter and the other one when using  `()`. Using Type Families we can say that type used as a parameter to a type constructor determines the type we will be able to construct - so type depending on another type. 
+Here we are providing two instances of the same data type. One can be constructed when using `Char` for the type constructor parameter and the other one when using  `()`.
+
+Following example uses type level funcion on a type level data to reverse a list
+
+```
+type family Reverse (xs :: [a]) :: [a] 
+```
+
+Using Type Families we can say that type used as a parameter to a type constructor determines the type we will be able to construct - so type depending on another type. 
 
 Haskell is famous for its _If it compiles - it works_ approach, which is very true but we are haskellers - we always want more type safety and abstraction. 
 
@@ -147,7 +158,7 @@ This is desugared version of the more convenient syntax that we usually use
 ```
 data IntOrString a where
     IntConstructor    :: Int    -> IntOrString Int
-    StringConstructor :: String -> IntOrString Int
+    StringConstructor :: String -> IntOrString String
 ```
 
 Here is example of the pattern match:
